@@ -161,7 +161,7 @@ class Jwst:
 def main():
     run = True
     mode="hubble"
-    game=True
+    
     FPS = 60
     level = 0
     lives = 5
@@ -186,8 +186,7 @@ def main():
     pressed2=False
     pressed1_time=None
     pressed2_time=None
-    esc=False
-    esc_time=pygame.time.get_ticks()
+    
     def redraw_window():
         WIN.blit(BG, (-165,-70))
 
@@ -278,151 +277,136 @@ def main():
                 
     
     while run:
-        if game:
-            clock.tick(FPS)
-            redraw_window()
-            if lives <= 0 or player.health <= 0:
-                lost = True
-                lost_count += 1
+        
+        redraw_window()
+        
+        clock.tick(FPS)
+        if lives <= 0 or player.health <= 0:
+            lost = True
+            lost_count += 1
 
-            if lost:
-                if lost_count > FPS * 3:
-                    run = False
-                else:
-                    continue
-            if jwst.info>=100:
-                jwst.info=100
-            if len(enemies) == 0:
-                level += 1
-                title_font = pygame.font.SysFont("comicsans", 12)
-                if level==1:
-                    level_label=title_font.render("USE NIRCAM OR MIRCAM TO SPOT THE ALIENS BY 2 OR 3", 1, (255,255,255))
-                    WIN.blit(level_label, (WIDTH/2 - level_label.get_width()/2, 200))
-                    pygame.time.delay(5000)
-                if level==2:
-                    level_label=title_font.render("THESE ALIENS ARE MORE SMARTER SO THEY ARE ONLY ALOWWING SOME SPECTRA OF INFRARED LIHT TO REFLECT USE NIRSpec -4 TO FIND THEM BY THEIR CHEMICAL OMPOSITION ", 1, (255,255,255))
-                    level_label1=title_font.render("USE R FOR HYDROGEN B FOR OXYGEN AND G FOR NITROGEN",1,(255,255,255))
-                    WIN.blit(level_label, (WIDTH/2 - level_label.get_width()/2, 200))
-                    WIN.blit(level_label1, (WIDTH/2 - level_label.get_width()/2, 400))
-                    pygame.time.delay(5000)
-                if level==3:
-                    level_label1=title_font.render("THE SCIENTIST AT EARTH HAVE FOUND THE CHEMICAL COMPOSTION OF ALIENS BY SO THEY HAVE FOUND THE COMPOSTION OF GALAXY THEY BELONG TO- ",1,(255,255,255))
-                    level_label2=title_font.render("THE GALAXY IS RICH IN HYDROGEN SO IT FALLS IN THE RED SPECTRA OF INFRARED USE JWST TO LOCATE IT",1,(255,255,255))
-                    level_label3=title_font.render("USE FGS INSTRUMENT BY PRESSING 5 FOR ACCURACY COMBINED WITH NIRSPEC (R,G,B)",1,(255,255,255))
-                    WIN.blit(level_label1, (WIDTH/2 - level_label.get_width()/2, 350))
-                    WIN.blit(level_label2, (WIDTH/2 - level_label.get_width()/2, 400))
-                    WIN.blit(level_label3, (WIDTH/2 - level_label.get_width()/2, 500))
-                    pygame.time.delay(5000)
-                
-                jwst.info=0
-                if level !=3:
-                    wave_length += 5
-                    for i in range(wave_length):
-                        enemy = Enemy(random.randrange(50, WIDTH-100), random.randrange(-1200, -100), random.choice(["red", "blue", "green"]))
-                        enemies.append(enemy)
-
-            for event in pygame.event.get():
-                if event.type == pygame.QUIT:
-                    quit()
-
-            keys = pygame.key.get_pressed()
-            if keys[pygame.K_a] and player.x - player_vel > 0: # left
-                player.x -= player_vel
-            if keys[pygame.K_d] and player.x + player_vel + player.get_width() < WIDTH: # right
-                player.x += player_vel
-            if keys[pygame.K_w] and player.y - player_vel > 0: # up
-                player.y -= player_vel
-            if keys[pygame.K_s] and player.y + player_vel + player.get_height() + 15 < 300: # down
-                player.y += player_vel
-            if keys[pygame.K_SPACE]:
-                player.shoot()
-            if keys[pygame.K_LEFT] and jwst.x - jwst.vel > 0: # left
-                if not fgs:
-                    jwst.vel =-7
-                else:
-                    jwst.x-=7
-
-            elif keys[pygame.K_RIGHT] and jwst.x + jwst.vel + jwst.image.get_width() < WIDTH: # right
-                if not fgs:
-                    jwst.vel = 7
-                else:
-                    jwst.x+=7
-            if jwst.x+jwst.vel<0 or jwst.x+jwst.vel+jwst.image.get_width()>WIDTH:
-                jwst.vel*=-1
-            if keys[pygame.K_1]:
-                mode="hubble"
-            elif keys[pygame.K_2]:
-                mode="nir"
-            elif keys[pygame.K_3]:
-                mode="mir"
-            elif keys[pygame.K_4] and not pressed2 and not fgs:
-                instrument=not instrument
-                pressed2_time=pygame.time.get_ticks()
-                pressed2=True
-            elif keys[pygame.K_5]and not pressed1 and not instrument:
-                fgs=not fgs
-                pressed1_time=pygame.time.get_ticks()
-                pressed1=True
-            if pressed1:
-                current_time=pygame.time.get_ticks()
-                if current_time-pressed1_time>300:
-                    pressed1=False
-            if pressed2:
-                current_time=pygame.time.get_ticks()
-                if current_time-pressed2_time>300:
-                    pressed2=False
-            if keys[pygame.K_ESCAPE]and not esc:
-                esc=True
-                esc_time=pygame.time.get_ticks()
-                game=not game
-            if esc:
-                current_time=pygame.time.get_ticks()
-                if current_time-esc_time>=500:
-                        esc=False
-            
-            jwst.move(fgs)
-            if instrument or fgs:
-                if keys[pygame.K_r]:
-                    spectrum="red"
-                if keys[pygame.K_g]:
-                    spectrum="green"
-                if keys[pygame.K_b]:
-                    spectrum="blue"
-
-            if random.randrange(0, 20) == 1:
-                    photon=Laser(random.randrange(0,1200),random.randrange(-500,0),random.choice([RED_LASER,GREEN_LASER,BLUE_LASER]))
-                    cosmic_light.append(photon)
-            for enemy in enemies:
-                enemy.move(enemy_vel)
-                if collide(enemy, player):
-                    player.health -= 10
-                    enemies.remove(enemy)
-                elif enemy.y + enemy.get_height() > 510:
-                    lives -= 1
-                    enemies.remove(enemy)
-            for photon in cosmic_light:
-                if collide(jwst,photon):
-                    jwst.info +=10
-                    cosmic_light.remove(photon)
-            player.move_lasers(-laser_vel, enemies)
+        if lost:
+            if lost_count > FPS * 3:
+                run = False
+            else:
+                continue
+        if jwst.info>=100:
+            jwst.info=100
+        if len(enemies) == 0:
+            level += 1
+            title_font = pygame.font.SysFont("comicsans", 50)
+            if level==1:
+                level_label=title_font.render("USE NIRCAM OR MIRCAM TO SPOT THE ALIENS BY 2 OR 3", 1, (255,255,255))
+                WIN.blit(level_label, (WIDTH/2 - level_label.get_width()/2, 200))
+                pygame.time.delay(5000)
+            if level==2:
+                level_label=title_font.render("THESE ALIENS ARE MORE SMARTER SO THEY ARE ONLY ALOWWING SOME SPECTRA OF INFRARED LIHT TO REFLECT USE NIRSpec -4 TO FIND THEM BY THEIR CHEMICAL OMPOSITION ", 1, (255,255,255))
+                level_label1=title_font.render("USE R FOR HYDROGEN B FOR OXYGEN AND G FOR NITROGEN SPECTRA",1,(255,255,255))
+                WIN.blit(level_label, (WIDTH/2 - level_label.get_width()/2, 200))
+                WIN.blit(level_label1, (WIDTH/2 - level_label.get_width()/2, 400))
+                pygame.time.delay(5000)
             if level==3:
-                rect=pygame.Rect(900,90,40,40)
-                if pygame.mouse.get_pressed()[0]:
-                    if pygame.Rect.collidepoint(rect,pygame.mouse.get_pos()):
-                        win=title_font.render("YOU WON", 1, (255,255,255))
-                        WIN.blit(win, (WIDTH/2 - level_label.get_width()/2, 400))
-                        pygame.time.dealy(5000)
-                        quit()
-        else:
-            if  esc:
-                current_time=pygame.time.get_ticks()
-                if current_time-esc_time>=3000:
-                        esc=not esc
-            keys=pygame.key.get_pressed()
-            if keys[pygame.K_ESCAPE]and not esc:
-                    game=not game
-                    esc_time=pygame.time.get_ticks()
-                    esc=not esc
+                level_label1=title_font.render("THE SCIENTIST AT EARTH HAVE FOUND THE CHEMICAL COMPOSTION OF ALIENS BY SO THEY HAVE FOUND THE COMPOSTION OF GALAXY THEY BELONG TO- ",1,(255,255,255))
+                level_label2=title_font.render("THE GALAXY IS RICH IN HYDROGEN SO IT FALLS IN THE RED SPECTRA OF INFRARED USE JWST TO LOCATE IT",1,(255,255,255))
+                level_label3=title_font.render("USE FGS INSTRUMENT BY PRESSING 5 FOR ACCURACY COMBINED WITH NIRSPEC (R,G,B)",1,(255,255,255))
+                WIN.blit(level_label1, (WIDTH/2 - level_label.get_width()/2, 350))
+                WIN.blit(level_label2, (WIDTH/2 - level_label.get_width()/2, 400))
+                WIN.blit(level_label3, (WIDTH/2 - level_label.get_width()/2, 500))
+                pygame.time.delay(5000)
+            
+            jwst.info=0
+            if level !=3:
+                wave_length += 5
+                for i in range(wave_length):
+                    enemy = Enemy(random.randrange(50, WIDTH-100), random.randrange(-1200, -100), random.choice(["red", "blue", "green"]))
+                    enemies.append(enemy)
+
+        for event in pygame.event.get():
+            if event.type == pygame.QUIT:
+                quit()
+
+        keys = pygame.key.get_pressed()
+        if keys[pygame.K_a] and player.x - player_vel > 0: # left
+            player.x -= player_vel
+        if keys[pygame.K_d] and player.x + player_vel + player.get_width() < WIDTH: # right
+            player.x += player_vel
+        if keys[pygame.K_w] and player.y - player_vel > 0: # up
+            player.y -= player_vel
+        if keys[pygame.K_s] and player.y + player_vel + player.get_height() + 15 < 300: # down
+            player.y += player_vel
+        if keys[pygame.K_SPACE]:
+            player.shoot()
+        if keys[pygame.K_LEFT] and jwst.x - jwst.vel > 0: # left
+            if not fgs:
+                jwst.vel =-7
+            else:
+                jwst.x-=7
+
+        elif keys[pygame.K_RIGHT] and jwst.x + jwst.vel + jwst.image.get_width() < WIDTH: # right
+            if not fgs:
+                jwst.vel = 7
+            else:
+                jwst.x+=7
+        if jwst.x+jwst.vel<0 or jwst.x+jwst.vel+jwst.image.get_width()>WIDTH:
+            jwst.vel*=-1
+        if keys[pygame.K_1]:
+            mode="hubble"
+        elif keys[pygame.K_2]:
+            mode="nir"
+        elif keys[pygame.K_3]:
+            mode="mir"
+        elif keys[pygame.K_4] and not pressed2 and not fgs:
+            instrument=not instrument
+            pressed2_time=pygame.time.get_ticks()
+            pressed2=True
+        elif keys[pygame.K_5]and not pressed1 and not instrument:
+            fgs=not fgs
+            pressed1_time=pygame.time.get_ticks()
+            pressed1=True
+        if pressed1:
+            current_time=pygame.time.get_ticks()
+            if current_time-pressed1_time>300:
+                pressed1=False
+        if pressed2:
+            current_time=pygame.time.get_ticks()
+            if current_time-pressed2_time>300:
+                pressed2=False
+        
+        
+        jwst.move(fgs)
+        if instrument or fgs:
+            if keys[pygame.K_r]:
+                spectrum="red"
+            if keys[pygame.K_g]:
+                spectrum="green"
+            if keys[pygame.K_b]:
+                spectrum="blue"
+
+        if random.randrange(0, 20) == 1:
+                photon=Laser(random.randrange(0,1200),random.randrange(-500,0),random.choice([RED_LASER,GREEN_LASER,BLUE_LASER]))
+                cosmic_light.append(photon)
+        for enemy in enemies:
+            enemy.move(enemy_vel)
+            if collide(enemy, player):
+                player.health -= 10
+                enemies.remove(enemy)
+            elif enemy.y + enemy.get_height() > 510:
+                lives -= 1
+                enemies.remove(enemy)
+        for photon in cosmic_light:
+            if collide(jwst,photon):
+                jwst.info +=10
+                cosmic_light.remove(photon)
+        player.move_lasers(-laser_vel, enemies)
+        if level==3:
+            rect=pygame.Rect(900,90,40,40)
+            if pygame.mouse.get_pressed()[0]:
+                if pygame.Rect.collidepoint(rect,pygame.mouse.get_pos()):
+                    win=title_font.render("YOU WON", 1, (255,255,255))
+                    WIN.blit(win, (WIDTH/2 - level_label.get_width()/2, 400))
+                    pygame.time.dealy(5000)
+                    quit()
+    
             
 
 def main_menu():
@@ -433,28 +417,28 @@ def main_menu():
         WIN.blit(BG, (-165,-70))
         
         title_label = title_font.render("THE EARTH IS BEING INVADED BY ALIENS THE SPACE FORCE HAS BEEN DEPLOYED, BUT THESE ALIENS ARE SMART AND CAN'T BE DETECTED IN VISIBLE LIGHT USE THE JWST TO HELP THE PILOT", 1, (255,255,255))
-        next_label = title_font.render("Press mouse to begin!", 1, (255,255,255))
         label_2=title_font.render("USE W,A,S,P TO CONTROL PILOT AND LEFT,RIGHT ARROW KEY TO CONTROL JWST COLLECT LIGHT FIRST FOR ENOUGH DATA FOR JWST" ,1, (255,255,255))
         label_3=title_font.render("PRESS 1 FOR VISIBLE SPECTRUM ", 1, (255,255,255))
         label_4=title_font.render("PRESS 2 FOR NIRCam ", 1, (255,255,255))
         label_5=title_font.render("PRESS 3 FOR MIRI", 1, (255,255,255))
         label_6=title_font.render("PRESS 4 FOR NIRSpec ", 1, (255,255,255))
         label_7=title_font.render("PRESS 5 FOR FGS ", 1, (255,255,255))
+        next_label = title_font.render("Press any key to begin", 1, (255,255,255))
         
-        WIN.blit(title_label, (WIDTH/2 - title_label.get_width()/2, 100))
-        WIN.blit(title_label, (WIDTH/2 - title_label.get_width()/2, 150))
-        WIN.blit(title_label, (WIDTH/2 - title_label.get_width()/2, 200))
-        WIN.blit(title_label, (WIDTH/2 - title_label.get_width()/2, 250))
-        WIN.blit(title_label, (WIDTH/2 - title_label.get_width()/2, 300))
-        WIN.blit(title_label, (WIDTH/2 - title_label.get_width()/2, 350))
-        WIN.blit(title_label, (WIDTH/2 - title_label.get_width()/2, 400))
-        WIN.blit(title_label, (WIDTH/2 - title_label.get_width()/2, 450))
+        WIN.blit(title_label, (WIDTH/2 - title_label.get_width()/2, 50))
+        WIN.blit(label_2, (WIDTH/2 - title_label.get_width()/2, 180))
+        WIN.blit(label_3, (WIDTH/2 - title_label.get_width()/2, 150))
+        WIN.blit(label_4, (WIDTH/2 - title_label.get_width()/2, 200))
+        WIN.blit(label_5, (WIDTH/2 - title_label.get_width()/2, 250))
+        WIN.blit(label_6, (WIDTH/2 - title_label.get_width()/2, 280))
+        WIN.blit(label_7, (WIDTH/2 - title_label.get_width()/2, 310))
+        WIN.blit(next_label, (WIDTH/2 - title_label.get_width()/2, 330))
         pygame.display.update()
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 run = False
                 
-            if event.type == pygame.MOUSEBUTTONDOWN:
+            if event.type == pygame.KEYDOWN:
                 main()
     pygame.quit()
 
