@@ -264,7 +264,6 @@ def main():
         if lost:
             lost_label = lost_font.render("You Lost!!", 1, (255,255,255))
             WIN.blit(lost_label, (WIDTH/2 - lost_label.get_width()/2, 350))
-            pygame.time.delay(3000)
         extra()
         pygame.display.update()
     def extra():
@@ -285,27 +284,7 @@ def main():
             if lives <= 0 or player.health <= 0:
                 lost = True
                 lost_count += 1
-            title_font = pygame.font.SysFont("comicsans", 12)
-            if level==1:
-                level_label=title_font.render("USE NIRCAM OR MIRCAM TO SPOT THE ALIENS BY 2 OR 3", 1, (255,255,255))
-                WIN.blit(level_label, (WIDTH/2 - level_label.get_width()/2, 200))
-                pygame.time.delay(5000)
-            if level==2:
-                level_label=title_font.render("THESE ALIENS ARE MORE SMARTER SO THEY ARE ONLY ALOWWING SOME SPECTRA OF INFRARED LIHT TO REFLECT USE NIRSpec -4 TO FIND THEM BY THEIR CHEMICAL OMPOSITION ", 1, (255,255,255))
-                level_label1=title_font.render("USE R FOR HYDROGEN B FOR OXYGEN AND G FOR NITROGEN",1,(255,255,255))
-                WIN.blit(level_label, (WIDTH/2 - level_label.get_width()/2, 200))
-                WIN.blit(level_label1, (WIDTH/2 - level_label.get_width()/2, 400))
-                pygame.time.delay(5000)
-            if level==3:
-                level_label1=title_font.render("THE SCIENTIST AT EARTH HAVE FOUND THE CHEMICAL COMPOSTION OF ALIENS BY SO THEY HAVE FOUND THE COMPOSTION OF GALAXY THEY BELONG TO- ",1,(255,255,255))
-                level_label2=title_font.render("THE GALAXY IS RICH IN HYDROGEN SO IT FALLS IN THE RED SPECTRA OF INFRARED USE JWST TO LOCATE IT",1,(255,255,255))
-                level_label3=title_font.render("USE FGS INSTRUMENT BY PRESSING 5 FOR ACCURACY COMBINED WITH NIRSPEC (R,G,B)",1,(255,255,255))
-                WIN.blit(level_label1, (WIDTH/2 - level_label.get_width()/2, 350))
-                WIN.blit(level_label2, (WIDTH/2 - level_label.get_width()/2, 400))
-                WIN.blit(level_label3, (WIDTH/2 - level_label.get_width()/2, 500))
-                pygame.time.delay(5000)
-            
-                
+
             if lost:
                 if lost_count > FPS * 3:
                     run = False
@@ -315,7 +294,23 @@ def main():
                 jwst.info=100
             if len(enemies) == 0 and level!=3:
                 level += 1
-                
+                title_font = pygame.font.SysFont("comicsans", 12)
+                if level==1:
+                    level_label=title_font.render("USE NIRCAM OR MIRCAM TO SPOT THE ALIENS BY 2 OR 3", 1, (255,255,255))
+                    WIN.blit(level_label, (WIDTH/2 - level_label.get_width()/2, 200))
+                if level==2:
+                    level_label=title_font.render("THESE ALIENS ARE MORE SMARTER SO THEY ARE ONLY ALOWWING SOME SPECTRA OF INFRARED LIHT TO REFLECT USE NIRSpec -4 TO FIND THEM BY THEIR CHEMICAL OMPOSITION ", 1, (255,255,255))
+                    level_label1=title_font.render("USE R FOR HYDROGEN B FOR OXYGEN AND G FOR NITROGEN",1,(255,255,255))
+                    WIN.blit(level_label, (WIDTH/2 - level_label.get_width()/2, 200))
+                    WIN.blit(level_label1, (WIDTH/2 - level_label.get_width()/2, 400))
+                if level==3:
+                    level_label1=title_font.render("THE SCIENTIST AT EARTH HAVE FOUND THE CHEMICAL COMPOSTION OF ALIENS BY SO THEY HAVE FOUND THE COMPOSTION OF GALAXY THEY BELONG TO- ",1,(255,255,255))
+                    level_label2=title_font.render("THE GALAXY IS RICH IN HYDROGEN SO IT FALLS IN THE RED SPECTRA OF INFRARED USE JWST TO LOCATE IT",1,(255,255,255))
+                    level_label3=title_font.render("USE FGS INSTRUMENT BY PRESSING 5 FOR ACCURACY COMBINED WITH NIRSPEC (R,G,B)",1,(255,255,255))
+                    WIN.blit(level_label1, (WIDTH/2 - level_label.get_width()/2, 350))
+                    WIN.blit(level_label2, (WIDTH/2 - level_label.get_width()/2, 400))
+                    WIN.blit(level_label3, (WIDTH/2 - level_label.get_width()/2, 500))
+                pygame.time.delay(5000)
                 jwst.info=0
                 if level !=3:
                     wave_length += 5
@@ -413,7 +408,7 @@ def main():
                     if pygame.Rect.collidepoint(rect,pygame.mouse.get_pos()):
                         win=title_font.render("YOU WON", 1, (255,255,255))
                         WIN.blit(win, (WIDTH/2 - level_label.get_width()/2, 400))
-                        pygame.time.delay(3000)
+                        pygame.time.dealy(5000)
                         quit()
         else:
             if  esc:
