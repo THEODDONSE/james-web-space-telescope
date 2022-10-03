@@ -292,17 +292,19 @@ def main():
                     continue
             if jwst.info>=100:
                 jwst.info=100
-            if len(enemies) == 0 and level!=3:
+            if len(enemies) == 0:
                 level += 1
                 title_font = pygame.font.SysFont("comicsans", 12)
                 if level==1:
                     level_label=title_font.render("USE NIRCAM OR MIRCAM TO SPOT THE ALIENS BY 2 OR 3", 1, (255,255,255))
                     WIN.blit(level_label, (WIDTH/2 - level_label.get_width()/2, 200))
+                    pygame.time.delay(5000)
                 if level==2:
                     level_label=title_font.render("THESE ALIENS ARE MORE SMARTER SO THEY ARE ONLY ALOWWING SOME SPECTRA OF INFRARED LIHT TO REFLECT USE NIRSpec -4 TO FIND THEM BY THEIR CHEMICAL OMPOSITION ", 1, (255,255,255))
                     level_label1=title_font.render("USE R FOR HYDROGEN B FOR OXYGEN AND G FOR NITROGEN",1,(255,255,255))
                     WIN.blit(level_label, (WIDTH/2 - level_label.get_width()/2, 200))
                     WIN.blit(level_label1, (WIDTH/2 - level_label.get_width()/2, 400))
+                    pygame.time.delay(5000)
                 if level==3:
                     level_label1=title_font.render("THE SCIENTIST AT EARTH HAVE FOUND THE CHEMICAL COMPOSTION OF ALIENS BY SO THEY HAVE FOUND THE COMPOSTION OF GALAXY THEY BELONG TO- ",1,(255,255,255))
                     level_label2=title_font.render("THE GALAXY IS RICH IN HYDROGEN SO IT FALLS IN THE RED SPECTRA OF INFRARED USE JWST TO LOCATE IT",1,(255,255,255))
@@ -310,7 +312,8 @@ def main():
                     WIN.blit(level_label1, (WIDTH/2 - level_label.get_width()/2, 350))
                     WIN.blit(level_label2, (WIDTH/2 - level_label.get_width()/2, 400))
                     WIN.blit(level_label3, (WIDTH/2 - level_label.get_width()/2, 500))
-                pygame.time.delay(5000)
+                    pygame.time.delay(5000)
+                
                 jwst.info=0
                 if level !=3:
                     wave_length += 5
@@ -437,7 +440,15 @@ def main_menu():
         label_5=title_font.render("PRESS 3 FOR MIRI", 1, (255,255,255))
         label_6=title_font.render("PRESS 4 FOR NIRSpec ", 1, (255,255,255))
         label_7=title_font.render("PRESS 5 FOR FGS ", 1, (255,255,255))
+        
+        WIN.blit(title_label, (WIDTH/2 - title_label.get_width()/2, 100))
+        WIN.blit(title_label, (WIDTH/2 - title_label.get_width()/2, 150))
         WIN.blit(title_label, (WIDTH/2 - title_label.get_width()/2, 200))
+        WIN.blit(title_label, (WIDTH/2 - title_label.get_width()/2, 250))
+        WIN.blit(title_label, (WIDTH/2 - title_label.get_width()/2, 300))
+        WIN.blit(title_label, (WIDTH/2 - title_label.get_width()/2, 350))
+        WIN.blit(title_label, (WIDTH/2 - title_label.get_width()/2, 400))
+        WIN.blit(title_label, (WIDTH/2 - title_label.get_width()/2, 450))
         pygame.display.update()
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
